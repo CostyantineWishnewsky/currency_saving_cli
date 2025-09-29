@@ -1,0 +1,7 @@
+
+from support.ApiRepositories.MockupApiRepository import MockupApiRepository
+from support.CacheRepositories.MemoryCacheRepository import MemoryCacheRepository
+
+
+CACH_REPOSITORY=MemoryCacheRepository(token=None)
+API_REPOSITORY=MockupApiRepository()
