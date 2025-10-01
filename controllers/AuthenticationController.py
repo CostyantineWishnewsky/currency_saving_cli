@@ -18,7 +18,6 @@ class AuthenticationController:
         self._api_repository=api_repository
 
     async def login(self,parameters:list[str])->ControllerResult:
-        
         if len(parameters) == 0:
             view=LoginView()
             view.print()    
@@ -27,7 +26,7 @@ class AuthenticationController:
             if token == None:
                 error_view=ErrorView(message=view.get_error_message())
                 error_view.print()
-                return
+                return 
             
             if await self._api_repository.check_token(token):
                 if await self._cache_repository.set_token(token):
@@ -41,6 +40,7 @@ class AuthenticationController:
             error_view.print()
             return
         return result_redirect(route_to='help',arguments=['login'])
+    
     async def logout(self,parameters:list[str])->ControllerResult:
         #validate parameters
         if len(parameters) == 0:

@@ -13,6 +13,10 @@ class CacheRepository(ABC):
         pass
 
     @abstractmethod
+    async def is_updated_today(self)->bool:
+        pass
+
+    @abstractmethod
     async def get_token(self)->str:
         pass
     @abstractmethod
@@ -34,6 +38,7 @@ class CacheRepository(ABC):
     @abstractmethod
     async def add_currencies_exchange_rate_rule(self,exchange_rate_rule:CurrencyExchangeRateRule)->bool:
         pass
+
 
     @abstractmethod
     async def get_today_currencies_exchange_rate(self)->list[CurrencyExchangeRate]:

@@ -20,8 +20,8 @@ ROUTER={
         'order':ExchangeRatesController(cache_repository=CACH_REPOSITORY).order,
     },
     'sources':{
-        'avaliable':SourcesController(cache_repository=CACH_REPOSITORY).avaliable,
-        '':SourcesController(cache_repository=CACH_REPOSITORY).empty,
+        'avaliable':SourcesController(cache_repository=CACH_REPOSITORY,api_repository=API_REPOSITORY).avaliable,
+        '':SourcesController(cache_repository=CACH_REPOSITORY,api_repository=API_REPOSITORY).empty,
     },
     'login':AuthenticationController(cache_repository=CACH_REPOSITORY,api_repository=API_REPOSITORY).login,
     'logout':AuthenticationController(cache_repository=CACH_REPOSITORY,api_repository=API_REPOSITORY).logout,
@@ -30,6 +30,7 @@ ROUTER={
 
 
 async def handle_controller_result(result:ControllerResult)->None:
+    print(result)
     if result.status == ControllerResultStatus.Ok:
         return
     if result.status == ControllerResultStatus.Redirect:

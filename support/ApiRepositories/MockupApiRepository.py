@@ -25,6 +25,11 @@ class MockupApiRepository(ApiRepository):
         source_of_information1=SourceOfInformation(id=0,name='google.com')
         source_of_information2=SourceOfInformation(id=1,name='private bank')
 
+        self._sources_of_information=[
+            source_of_information1,
+            source_of_information2,
+        ]
+
         default_snapshot=DateTimeSnapshot(data=[
             CurrencyExchangeRate(id=0,currency_from=dollar_currency,currency_to=euro_currency,value=1300,amount_of_numbers_after_point=2,source_of_information=source_of_information1),
             CurrencyExchangeRate(id=1,currency_from=dollar_currency,currency_to=euro_currency,value=1300,amount_of_numbers_after_point=2,source_of_information=source_of_information2),
@@ -54,12 +59,17 @@ class MockupApiRepository(ApiRepository):
     async def get_currency_info(self,request:CurrencyInfoRequest)->list[CurrencyExchangeRate]:
         output=[]
         for date,date_snapshot in self._currency_info.items():
-            if date > request.filters.time_from and date < request.filters.time_to:
-                for exchange_rate in self._currency_info[date].data:
-                    if exchange_rate.source_of_information == request.filters.source_of_information:
-                        output.append(exchange_rate)
-                        continue
+            # if date > request.filters.time_from and date < request.filters.time_to:
+            # if date - request.filters.time_from > 0 and date < request.filters.time_to:
+
+            for exchange_rate in self._currency_info[date].data:
+                if exchange_rate.source_of_information == request.filters.source_of_information:
+                    output.append(exchange_rate)
                     continue
-            continue
+                continue
+            # continue
         return output
+    
+    async def get_avaliable_sources_of_information(self)->list[SourceOfInformation]:
+        return self._sources_of_information
         

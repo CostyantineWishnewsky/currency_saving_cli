@@ -7,6 +7,8 @@ class SourcesAvaliableView:
         self._sources_of_information=sources_of_information
     def print(self)->None:
         print("#####################################")
-        print("#    SourcesOfInformationView       #")
+        print("# Avaliable sources of information  #")
         print("#####################################")
+        for source in self._sources_of_information:
+            print(f'{source.name}')
         

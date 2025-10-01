@@ -5,17 +5,19 @@ from views.ExchangeRatesAddView import ExchangeRatesAddView
 from views.statuses.SuccessView import SuccessView
 
 from support.ControllerResult import ControllerResult
-from support.ControllerResult_factories import result_redirect,result_ok_empty
+from support.ControllerResult_factories import result_redirect,result_ok_empty,result_error
 
+
+from views.statuses.ErrorView import ErrorView
+from views.ExchangeRatesOrderView import ExchangeRatesOrderView
 
 class ExchangeRatesController:
     def __init__(self,cache_repository:CacheRepository):
         self._cache_repository=cache_repository
 
     async def add(self,parameters:list[str])->ControllerResult:
-        #validate amount of parameters there should be 0
         if len(parameters) == 0:
-            currencies=self._cache_repository.get_list_of_currencies()
+            currencies=await self._cache_repository.get_list_of_currencies()
             #TODO check if currencies is not []
 
             # view=ExchangeRatesAddView(['uah','usd','euro'])
@@ -26,43 +28,55 @@ class ExchangeRatesController:
                 currency_from=view.get_currency_from()
                 currency_to=view.get_currency_to()
 
-                
+                #TODO add Rule in cache
 
                 success_view=SuccessView(message='Rule successfully added')
                 success_view.print()
                 return result_ok_empty()
-            #     return
-            #TODO here should be error result
             return result_ok_empty()
-            # return
         return result_redirect(route_to='help',arguments=['exchange-rates'])
-        #TODO here should be redirect to Help for command 'add'
-
-        #opens input for currency_from separare view with list of currency_to
-        #validate all currencies with list of all avaliable in cache
-        #opens input for currency_to with list of currencies to
-        #validate all currencies with list of all avaliable in cache
-        #opens input with source of information and all for all
-        #validate source of information input
-        #if after validation error display error view
-        #Create ExchangeRate and add to cacher
-        #display Success View
-
-        pass
     #TODO
     async def remove(self,parameters:list[str])->ControllerResult:
-        #validate amount of parameters there should be 1
-        #Opens Remove ExchangeRateView
-        #input validate exchange rate id
-        #if yes
+        # Step 1: validate parameter count
+        if len(parameters) == 1:
+            # view=ErrorView(message="Exactly 1 parameter (exchange rate id) is required.")
+            # view.print()
+            # return result_error(error_message="Exactly 1 parameter (exchange rate id) is required.")
+            # self._cache_repository.
+            
+            view=SuccessView(message='Rule has been removed')
+            view.print()
+        #exchange_rate_id = parameters[0]
+
+        # Step 2: validate exchange rate id exists
+        # i#f exchange_rate_id in self.cache:
+        #     # Step 3: remove from cache
+        #     del self.cache[exchange_rate_id]
+        #     return self.success_view(exchange_rate_id)
+        # else:
+        #     # Step 4: display error
+        #     return self.error_view(
+        #         f"No such rule with id '{exchange_rate_id}'. "
+        #         f"Use 'list_currencies_exchange' command to get available ones."
+        #     )
+        # validate amount of parameters there should be 1
+        # Opens Remove ExchangeRateView
+        # input validate exchange rate id
+        # if yes
         #   remove from cache
         #   display success view
-        #if no
+        # if no
         #   display error view with no such rule with id,not get list currencies exchange use order command
         return result_redirect(route_to='help',arguments=['exchange-rates'])
     #TODO
     async def order(self,parameters:list[str])->ControllerResult:
         #validate amount of parameters there should be 0
+        if len(parameters) == 0:
+            currency_exchange_rates=await self._cache_repository.get_today_currencies_exchange_rate()
+            view=ExchangeRatesOrderView(currency_exchange_rates=currency_exchange_rates)
+            view.print()
+            return result_ok_empty()
+
         #get amount of ExchateRateViews from cache
         #create ExchangeRateView
         #display ExchangeRateView order

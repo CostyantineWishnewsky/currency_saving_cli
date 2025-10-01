@@ -48,6 +48,9 @@ class MemoryCacheRepository(CacheRepository):
 
     async def setup(self)->bool:
         return True
+    
+    async def is_updated_today(self)->bool:
+        return True
 
     async def get_token(self)->str:
         return self._token
@@ -80,7 +83,7 @@ class MemoryCacheRepository(CacheRepository):
         return True
 
     async def get_today_currencies_exchange_rate(self)->list[CurrencyExchangeRate]:
-        return self._exchange_rates.values()
+        return list(self._exchange_rates.values())
     
     async def get_command_help_info_of(self,command_name:str)->CommandHelpInfo:
         if command_name in self._command_infos.keys():

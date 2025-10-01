@@ -21,5 +21,4 @@ class HelpController:
         command_infos=await self._cache_repository.get_all_command_help_infos()
         view=HelpView(command_help_infos=command_infos)
         view.print()
-        # return
         return result_ok_empty()
