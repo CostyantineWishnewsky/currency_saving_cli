@@ -14,7 +14,6 @@ class SourcesController:
         self._api_repository=api_repository
 
     async def empty(self,parameters:list[str])->ControllerResult:
-        print('empty')
         if len(parameters) == 0:
             sources_of_information=await self._cache_repository.get_sources_of_information()
             view=SourcesEmptyView(sources_of_information=sources_of_information)
