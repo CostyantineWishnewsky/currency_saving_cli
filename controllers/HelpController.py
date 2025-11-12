@@ -1,24 +1,27 @@
 
+from core.Controller import Controller
+from core.EventObserver import EventObserver
+from core.Events.Controller.ControllerShowViewEvent import ControllerShowViewEvent
 
-from support.CacheRepository import CacheRepository
-from support.ControllerResult import ControllerResult
-from support.ControllerResult_factories import result_ok_empty
+from core.Views.PythonStdTerminalView import PythonStdTerminalView
 
-from views.HelpView import HelpView
-from views.HelpForCommandView import HelpForCommandView
+from pages.HelpController.HelpAllCommandsPage import HelpAllCommandsPage
+from pages.HelpController.HelpForCommandPage import HelpForCommandPage
 
+def create_HelpController_data(id:int,command_name:str = None)->dict:
+    return {'id':id,'command':command_name}
 
-class HelpController:
-    def __init__(self,cache_repository:CacheRepository):
-        self._cache_repository=cache_repository
-
-    async def help(self,parameters:list[str])->ControllerResult:
-        if len(parameters)==1:
-            command_info=await self._cache_repository.get_command_help_info_of(command_name=parameters[0])
-            view=HelpForCommandView(command_help_info=command_info)
-            view.print()
+class HelpController(Controller):
+    def __init__(self,data:dict):
+        super().__init__(data['id'])
+        self._command_name=data["command"]
+    def index(self):
+        commands_infos=self._cache_repository.get_all_command_help_infos()    
+        if self._command_name == None:
+            self._window=PythonStdTerminalView(HelpAllCommandsPage(command_help_infos=commands_infos))
             return
-        command_infos=await self._cache_repository.get_all_command_help_infos()
-        view=HelpView(command_help_infos=command_infos)
-        view.print()
-        return result_ok_empty()
+        for command_info in commands_infos:
+            if command_info.name == self._command_name:
+                self._window=PythonStdTerminalView(HelpForCommandPage(command_help_info=command_info))
+                return
+        self._window=PythonStdTerminalView(HelpAllCommandsPage(command_help_infos=commands_infos))

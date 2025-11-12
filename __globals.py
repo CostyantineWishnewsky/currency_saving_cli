@@ -1,8 +1,9 @@
 
-# from support.ApiRepositories.MockupApiRepository import MockupApiRepository
-# from support.CacheRepositories.MemoryCacheRepository import MemoryCacheRepository
-from support.CacheRepositories.JsonCacheRepository import JsonCacheRepository
 
-# CACH_REPOSITORY=MemoryCacheRepository(token=None)
-CACH_REPOSITORY=JsonCacheRepository(path="./database.json")
-# API_REPOSITORY=MockupApiRepository()
+from core.CacheRepositories.JsonCacheRepository import JsonCacheRepository
+from core.ApiRepositories.HttpApiRepository import HttpApiRepository
+#from core.Applications.PythonStdTerminalApplication import PythonStdTerminalApplication
+
+CACH_REPOSITORY=JsonCacheRepository(path="./data.json")
+API_REPOSITORY=HttpApiRepository("localhost",8000)
+#APPLICATION=PythonStdTerminlApplication(sys.argv)

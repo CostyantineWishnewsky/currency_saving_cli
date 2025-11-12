@@ -1,37 +1,41 @@
 
+
+
+from core.EventObserver import EventObserver
+
+from core.Events.ControllerCreator.CreateHomeControllerEvent import CreateHomeControllerEvent
+from core.Events.Controller.RunControllerEvent import RunControllerEvent
+
+from core.ControllersCreator import ControllersCreator
+
+
 import sys
-import asyncio
-
-from router import ROUTER,handle_controller_result
+from core.Applications.PythonStdTerminalApplication import PythonStdTerminalApplication
 
 
-async def main()->None:
-    args = sys.argv[1:]
 
-    if not args:
-        controller_result=await ROUTER['help']([])
-        return
-    if args[0] in ROUTER.keys():
-        if type(ROUTER[args[0]]) == dict:
-            if len(args) == 1:
-                if '' in ROUTER[args[0]].keys():
-                    controller_result=await ROUTER[args[0]]['']([])
-                    await handle_controller_result(result=controller_result)
-                    return
-                controller_result=await ROUTER['help']([args[0]])
-                
-                return
-            if args[1] in ROUTER[args[0]].keys():
-                controller_result=await ROUTER[args[0]][args[1]](args[2:])
-                await handle_controller_result(result=controller_result)
-            return
-        controller_result=await ROUTER[args[0]](args[1:])
-        await handle_controller_result(result=controller_result)
-        return
-    controller_result=await ROUTER['help']([])
-    await handle_controller_result(result=controller_result)
+def main()->None:
+    app=PythonStdTerminalApplication(sys.argv)
+    app.setup()
 
-    
+    app.run()
+    # event_observer=EventObserver()
+    # event_observer.setup()
+
+    # id=event_observer.get_last_event_subscriber_id()
+
+    # controllers_creator=ControllersCreator(id)
+    # controllers_creator.setup()
+
+    # controllers_creator_id=controllers_creator.get_event_subscribtion_id()
+    # event_observer.notify(CreateHomeControllerEvent(controllers_creator_id))
+
+
+    # home_controller_id=event_observer.get_id_by_name('home')
+
+    # event_observer.notify(RunControllerEvent(id=home_controller_id,data={}))
+    # event_observer.run()
+
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
